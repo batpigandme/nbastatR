@@ -1202,7 +1202,7 @@ all_nba_teams <-
       mutate_at(df %>% dplyr::select(-one_of(c(
         "Tm", "Player", "Pos"
       ))) %>% names(),
-      funs(. %>% as.numeric())) %>%
+      list(. %>% as.numeric())) %>%
       filter(!Rk %>% is.na()) %>%
       suppressWarnings() %>%
       dplyr::select(-dplyr::matches("Rk"))
@@ -1259,7 +1259,7 @@ all_nba_teams <-
     df <-
       df %>%
       mutate_at(df %>% dplyr::select(dplyr::matches("pct")) %>% names(),
-                funs(ifelse(. >= 1, . / 100, .))) %>%
+                list(ifelse(. >= 1, . / 100, .))) %>%
       mutate(typeData = name_slug) %>%
       dplyr::select(typeData, everything())
 
@@ -1434,7 +1434,7 @@ bref_players_stats <-
       mutate_all(str_trim) %>%
       mutate(rankConference = rankConference %>% str_replace_all('\\)', "")) %>%
       mutate_at(c("rankConference", "winsTeam", "lossesTeam"),
-                funs(. %>% as.integer())) %>%
+                list(. %>% as.integer())) %>%
       mutate_at(
         c(
           "pctWins",
@@ -1443,7 +1443,7 @@ bref_players_stats <-
           "ptsOppPerGame",
           "ratingStrengthOfSchedule"
         ),
-        funs(. %>% as.character() %>% readr::parse_number() %>% as.numeric())
+        list(. %>% as.character() %>% readr::parse_number() %>% as.numeric())
       ) %>%
       mutate(
         gamesBehind1Conference = ifelse(
@@ -1497,7 +1497,7 @@ bref_players_stats <-
       mutate_all(str_trim) %>%
       mutate(rankConference = rankConference %>% str_replace_all('\\)', "")) %>%
       mutate_at(c("rankConference", "winsTeam", "lossesTeam"),
-                funs(. %>% as.integer())) %>%
+                list(. %>% as.integer())) %>%
       mutate(idRow = 1:n()) %>%
       left_join(df_divisions) %>%
       filter(!rankConference %>% is.na()) %>%
@@ -1512,7 +1512,7 @@ bref_players_stats <-
           "ptsOppPerGame",
           "ratingStrengthOfSchedule"
         ),
-        funs(. %>% as.character() %>% readr::parse_number() %>% as.numeric())
+        list(. %>% as.character() %>% readr::parse_number() %>% as.numeric())
       ) %>%
       mutate(
         gamesBehind1Division = ifelse(gamesBehind1Division %>% is.na(), 0, gamesBehind1Division),
@@ -1694,7 +1694,7 @@ bref_players_stats <-
         nameTeam = nameTeam %>% str_replace_all("\\*", "")
       ) %>%
       mutate_at(numeric_names,
-                funs(. %>% as.character() %>% readr::parse_number())) %>%
+                list(. %>% as.character() %>% readr::parse_number())) %>%
       dplyr::select(nameTeam, isPlayoffTeam, everything()) %>%
       suppressWarnings()
 
@@ -1751,7 +1751,7 @@ bref_players_stats <-
         nameTeam = nameTeam %>% str_replace_all("\\*", "")
       ) %>%
       mutate_at(numeric_names,
-                funs(. %>% as.character() %>% readr::parse_number())) %>%
+                list(. %>% as.character() %>% readr::parse_number())) %>%
       dplyr::select(nameTeam, isPlayoffTeam, everything()) %>%
       suppressWarnings()
 
@@ -2272,7 +2272,7 @@ all_star_games <-
     all_star_data <-
       all_star_data %>%
       mutate_if(is.character,
-                funs(. %>% str_trim()))
+                list(. %>% str_trim()))
 
     all_star_data
   }
@@ -2317,7 +2317,7 @@ bref_injuries <-
       tidyr::separate(descriptionInjury, into = c("statusTypeInjury", "descriptionInjury"), sep = "\\ - ") %>%
       separate(statusTypeInjury, into = c("statusGame", "typeInjury"), sep = "\\(") %>%
       mutate(typeInjury = typeInjury %>% str_remove_all("\\)")) %>%
-      mutate_if(is.character, funs(. %>% str_trim())) %>%
+      mutate_if(is.character, list(. %>% str_trim())) %>%
       mutate(isOut = statusGame %>% str_to_lower() %>% str_detect("out"))
 
     data
@@ -2483,14 +2483,14 @@ dictionary_bref_awards <-
           nameExecutive = nameExecutive %>% gsub("\\(Tie)", "", .) %>% str_trim()
         ) %>%
         mutate_if(is.character,
-                  funs(str_trim))
+                  list(str_trim))
     }
 
   if (data %>% tibble::has_name("agePlayer")) {
     data <-
       data %>%
       mutate_at("agePlayer",
-                funs(. %>% as.numeric()))
+                list(. %>% as.numeric()))
 
   }
     if (data %>% tibble::has_name("namePlayer")) {
@@ -2501,7 +2501,7 @@ dictionary_bref_awards <-
           namePlayer = namePlayer %>% gsub("\\(Tie)", "", .) %>% str_trim()
         ) %>%
         mutate_if(is.character,
-                  funs(str_trim))
+                  list(str_trim))
 
       data <-
         data %>%
@@ -2714,7 +2714,7 @@ bref_awards <-
           df %>%
           spread(nameItem, value) %>%
           mutate_at(c("agePlayer", "pctVote", "pointsVote", "votesFirst"),
-                    funs(as.numeric)) %>%
+                    list(as.numeric)) %>%
           select(slugTable, idRow:namePlayer, slugTeam, pctVote, votesFirst, everything())
 
         df

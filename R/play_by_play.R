@@ -125,7 +125,7 @@
       purrr::set_names(names_md) %>%
       mutate(dateGame = dateGame %>% lubridate::mdy()) %>%
       mutate_at(c("idGame", "idTeamHome", "idTeamAway", "ptsTotalTeamHome", "ptsTotalTeamAway"),
-                funs(. %>% as.integer())
+                list(. %>% as.integer())
       ) %>%
       select(-dplyr::matches("pts"))
 

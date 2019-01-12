@@ -25,13 +25,13 @@
       purrr::set_names(actual_names) %>%
       tidyr::unite(namePlayer, nameFirst, nameLast, sep = " ") %>%
       mutate_at(c("idUpdate", "idPlayer", "idRotoWorld", "dateISO", "numberPriority"),
-                funs(. %>% as.numeric())) %>%
+                list(. %>% as.numeric())) %>%
       mutate_at(c("datetimePublished", "datetimeUpdatedLast"),
-                funs(. %>% lubridate::mdy_hms())) %>%
+                list(. %>% lubridate::mdy_hms())) %>%
       mutate(isInjured = !slugInjured %>% str_detect("NO")) %>%
       dplyr::select(idPlayer, namePlayer, slugTeam, codeTeam, datetimePublished, articleHeadline, everything()) %>%
       mutate_if(is.character,
-                funs(ifelse(. == "", NA_character_, .)))
+                list(ifelse(. == "", NA_character_, .)))
 
     if (return_message) {
       glue::glue("Acquired {nrow(data)} Roto Wire articles for {data$namePlayer %>% unique()}") %>% cat(fill = T)
@@ -202,7 +202,7 @@ players_rotowire <-
       purrr::set_names(c("title", "descriptionTransaction", "idTeam", "nameTeamFrom",
                          "idPlayer", "dateTransaction", "idTransaction", "meta")) %>%
       mutate_at(c("idPlayer", "idTransaction", "idTeam"),
-                funs(. %>% as.numeric())) %>%
+                list(. %>% as.numeric())) %>%
       mutate(dateTransaction = lubridate::mdy(dateTransaction)) %>%
       select(-one_of("title", "nameTeamFrom", "meta")) %>%
       suppressWarnings()

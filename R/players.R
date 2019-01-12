@@ -22,7 +22,7 @@
       df_parameters <-
         df_parameters %>%
         mutate_at(df_parameters %>% dplyr::select(dplyr::matches("is[A-Z]")) %>% names(),
-                  funs(ifelse(. == "Y", 1, 0) %>% as.logical())) %>%
+                  list(ifelse(. == "Y", 1, 0) %>% as.logical())) %>%
         mutate(numberTable = x,) %>%
         select(one_of(c("numberTable", "typeMeasure", "modeSearch")), everything()) %>%
         suppressWarnings()

@@ -96,7 +96,7 @@
     data <-
       data %>%
       mutate_at(num_names,
-                funs(. %>% as.character() %>% readr::parse_number())) %>%
+                list(. %>% as.character() %>% readr::parse_number())) %>%
       dplyr::rename(slugPosition = groupPosition)
 
     if (actual_names[actual_names %>% str_detect("set")] %>% length() > 0) {

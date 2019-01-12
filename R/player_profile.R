@@ -47,7 +47,7 @@
     data <-
       data %>%
       mutate_at(c("idPlayer", "numberTeamAward", "idTeam"),
-                funs(. %>% as.numeric())) %>%
+                list(. %>% as.numeric())) %>%
       suppressWarnings() %>%
       mutate(
         dateMonthAward = lubridate::mdy(dateMonthAward),
@@ -186,7 +186,7 @@ players_awards <-
                       sep = "\\, ") %>%
       tidyr::unite(namePlayer, nameFirst, nameLast, sep = " ") %>%
       mutate_if(is.character,
-                funs(ifelse(. == "", NA_character_, .))) %>%
+                list(ifelse(. == "", NA_character_, .))) %>%
       remove_na_columns() %>%
       dplyr::select(idPlayer, namePlayer, everything())
 

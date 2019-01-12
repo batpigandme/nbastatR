@@ -37,7 +37,7 @@
         df_parameters %>%
         mutate_at(
           df_parameters %>% dplyr::select(dplyr::matches("is[A-Z]")) %>% names(),
-          funs(ifelse(. == "Y", 1, 0) %>% as.logical())
+          list(ifelse(. == "Y", 1, 0) %>% as.logical())
         ) %>%
         mutate(numberTable = x) %>%
         select(numberTable, everything())
@@ -933,10 +933,10 @@ teams_tables <-
       remove_zero_sum_cols() %>%
       select(-one_of(c("numberTable", "idLeague"))) %>%
       mutate_if(is.character,
-                funs(ifelse(. == "", NA, .))) %>%
+                list(ifelse(. == "", NA, .))) %>%
       remove_na_columns() %>%
       mutate_at(c("locationX", "locationY"),
-                funs(. %>% as.character() %>% readr::parse_number())) %>%
+                list(. %>% as.character() %>% readr::parse_number())) %>%
       suppressWarnings() %>%
       suppressMessages() %>%
       select(dplyr::matches("yearSeason", "slugSeason", "nameTeam"), everything()) %>%

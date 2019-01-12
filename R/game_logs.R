@@ -124,7 +124,7 @@
         ) %>%
         ungroup() %>%
         mutate_if(is.logical,
-                  funs(ifelse(. %>% is.na(), FALSE, .)))
+                  list(ifelse(. %>% is.na(), FALSE, .)))
 
       data <-
         data %>%
@@ -194,7 +194,7 @@
         ) %>%
         ungroup() %>%
         mutate_if(is.logical,
-                  funs(ifelse(. %>% is.na(), FALSE, .)))
+                  list(ifelse(. %>% is.na(), FALSE, .)))
 
       data <-
         data %>%

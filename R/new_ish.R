@@ -1299,7 +1299,7 @@ munge_nba_data <- function(data) {
       data %>%
       tidyr::separate(timeGame, into = c("hours", "minutes"), sep = "\\:") %>%
       mutate_at(c("hours", "minutes"),
-                funs(. %>% as.numeric())) %>%
+                list(. %>% as.numeric())) %>%
       mutate(lengthGameMinutes = (hours * 60) + minutes) %>%
       dplyr::select(-one_of(c("hours", "minutes")))
   }
@@ -1309,7 +1309,7 @@ munge_nba_data <- function(data) {
       data <- data %>%
         tidyr::separate(minutes, into = c("min", "seconds"), sep = "\\:") %>%
         mutate_at(c("min", "seconds"),
-                  funs(. %>% as.numeric())) %>%
+                  list(. %>% as.numeric())) %>%
         mutate(seconds = seconds / 60,
                minExact = min + seconds) %>%
         dplyr::select(-c(min, seconds)) %>%
@@ -1326,7 +1326,7 @@ munge_nba_data <- function(data) {
   data <-
     data %>%
     mutate_at(num_names,
-              funs(. %>% as.numeric())) %>%
+              list(. %>% as.numeric())) %>%
     suppressWarnings()
 
   if (data %>% tibble::has_name("fga") && data %>%  tibble::has_name("fg3a")) {
@@ -1352,7 +1352,7 @@ munge_nba_data <- function(data) {
       ) %>%
       dplyr::select(-remove) %>%
       mutate_if(is.character,
-                funs(. %>% str_trim())) %>%
+                list(. %>% str_trim())) %>%
       dplyr::select(slugSeason:outcomeGame, locationGame, everything())
   }
 
@@ -1387,7 +1387,7 @@ munge_nba_data <- function(data) {
       data %>%
       tidyr::separate(slugScore, into = c("scoreHome", "scoreAway"), sep = "\\ - ", remove = F) %>%
       mutate_at(c("scoreHome", "scoreAway"),
-                funs(. %>% as.numeric())) %>%
+                list(. %>% as.numeric())) %>%
       mutate(slugTeamLeading = case_when(marginScore == 0 ~ "Tie",
                                          marginScore < 0 ~ "Away",
                                          TRUE ~ "Home"))
@@ -1410,7 +1410,7 @@ munge_nba_data <- function(data) {
         remove = F
       ) %>%
       mutate_at(c("minuteRemainingQuarter", "secondsRemainingQuarter"),
-                funs(. %>% as.numeric())) %>%
+                list(. %>% as.numeric())) %>%
 
       mutate(
         minuteGame = ((numberPeriod - 1) * 12) + (12 - minuteRemainingQuarter) + (((
@@ -1436,7 +1436,7 @@ munge_nba_data <- function(data) {
                       into = c("winsTeam", "lossesTeam"),
                       remove = F) %>%
       mutate_at(c("winsTeam", "lossesTeam"),
-                funs(. %>% as.numeric())) %>%
+                list(. %>% as.numeric())) %>%
       mutate(countGamesTeam = winsTeam + lossesTeam,
              pctWinTeam = winsTeam / (countGamesTeam)) %>%
       dplyr::select(idGame, slugRecordTeam,countGamesTeam, pctWinTeam, everything())
@@ -1444,9 +1444,9 @@ munge_nba_data <- function(data) {
   data <-
     data %>%
     mutate_if(is.character,
-              funs(str_trim)) %>%
+              list(str_trim)) %>%
     mutate_if(is.character,
-              funs(ifelse(. == "", NA, .)))
+              list(ifelse(. == "", NA, .)))
 
   logicial_names <-
     data %>% dplyr::select(dplyr::matches("^has[A-Z]|^is[A-Z]")) %>% names()
@@ -1455,7 +1455,7 @@ munge_nba_data <- function(data) {
     data <-
       data %>%
       mutate_at(logicial_names,
-                funs(. %>% as.numeric() %>% as.logical()))
+                list(. %>% as.numeric() %>% as.logical()))
   }
 
   id_names <-
@@ -1465,7 +1465,7 @@ munge_nba_data <- function(data) {
     data <-
       data %>%
       mutate_at(id_names,
-                funs(. %>% as.numeric()))
+                list(. %>% as.numeric()))
   }
 
   if (data %>% has_name("teamName") & !data %>% has_name("cityTeam")) {
@@ -1556,7 +1556,7 @@ munge_nba_data <- function(data) {
     data %>%
     mutate_at(
       .vars = data %>% select(dplyr::matches("^pts|^blk")) %>% names(),
-      funs(. %>% as.numeric())
+      list(. %>% as.numeric())
     )
 
   data <-
@@ -1579,7 +1579,7 @@ munge_nba_data <- function(data) {
   data <-
     data %>%
     mutate_if(is.numeric,
-              funs(ifelse(. %>% is.nan(), 0 , .)))
+              list(ifelse(. %>% is.nan(), 0 , .)))
 
   data
 }

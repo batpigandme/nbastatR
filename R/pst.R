@@ -42,7 +42,7 @@
         isDTD = descriptionTransaction %>% str_detect("DTD")
       ) %>%
       mutate_if(is.character,
-                funs(str_trim)) %>%
+                list(str_trim)) %>%
       suppressWarnings()
 
     data <-

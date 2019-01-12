@@ -57,7 +57,7 @@
     pct_cols <- data %>% select(dplyr::matches("pct[A-Z]")) %>% names()
     data %>%
       mutate_at(pct_cols,
-                funs(. %>% as.numeric() /  100))
+                list(. %>% as.numeric() /  100))
   }
 
 .dictionary_synergy_categories <-
@@ -172,7 +172,7 @@
         everything()
       ) %>%
       mutate_at("idTeam",
-                funs(. %>% as.numeric()))
+                list(. %>% as.numeric()))
 
     if (result_type %>% str_to_lower() == "player") {
       data <-
@@ -192,14 +192,14 @@
   data <-
     data %>%
     mutate_at(num_cols,
-             funs(. %>% as.character() %>% readr::parse_number()))
+             list(. %>% as.character() %>% readr::parse_number()))
 
   ppp_names <- data %>% dplyr::select(dplyr::matches("PPP")) %>% names()
 
   if (ppp_names %>% length() >0) {
     data <- data %>%
       mutate_at(ppp_names,
-                funs(. %>% as.numeric()))
+                list(. %>% as.numeric()))
   }
 
   data <-

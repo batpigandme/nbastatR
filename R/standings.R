@@ -96,7 +96,7 @@ current_standings <-
       dplyr::select(-dplyr::matches("Remove")) %>%
       munge_nba_data() %>%
       mutate_at(c("pctLosses", "pctWins"),
-                funs(. / 100)) %>%
+                list(. / 100)) %>%
       left_join(df_dict_nba_teams %>% select(idTeam, slugTeam, nameTeam, dplyr::matches("url"))) %>%
       mutate(dateData = Sys.Date(),
              rankTeam = 1:n()) %>%

@@ -357,7 +357,7 @@
           sep = "\\ "
         ) %>%
         mutate_at(c("yearHighSchool", "rankHighSchool"),
-                  funs(. %>% as.character() %>% readr::parse_number()))
+                  list(. %>% as.character() %>% readr::parse_number()))
 
     }
 

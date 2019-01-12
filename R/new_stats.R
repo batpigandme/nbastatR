@@ -390,7 +390,7 @@ current_schedule <-
   df_descriptions <-
     data_frame(descriptionGame = json_data$nugget$text) %>%
     mutate(idRow = 1:n()) %>%
-    mutate_all(funs(ifelse(. == "", NA, .)))
+    mutate_all(list(ifelse(. == "", NA, .)))
 
   df_home <-
     json_data$hTeam %>% flatten() %>% dplyr::as_data_frame() %>%
@@ -453,7 +453,7 @@ coaching_staffs <-
                          "idTeam", "numberSort",
                          "nameCollegeCoach")) %>%
       mutate_at(c("idCoach", "numberSort", "idTeam"),
-                funs(. %>% as.numeric())) %>%
+                list(. %>% as.numeric())) %>%
       select(-numberSort)
 
     data <-
@@ -537,7 +537,7 @@ nbastats_api_parameters <-
           "yearSeasonLast",
           "yearSeasonFirst"
         ),
-        funs(. %>% as.integer())
+        list(. %>% as.integer())
       ) %>%
       mutate(
         isActive = as.logical(isActive),
@@ -609,7 +609,7 @@ parse_for_seasons_data <-
     seasons %>%
       mutate_all(as.character) %>%
       mutate_at(c( "yearDataEnd", "idLeagueSeasonType", "yearDataStart"),
-                funs(. %>% as.numeric()))
+                list(. %>% as.numeric()))
   }
 
 .parse_for_teams <-
@@ -645,10 +645,10 @@ parse_for_seasons_data <-
                          "colorsTeam")) %>%
       mutate_at(c("idTeam",
                 "idConference", "idDivision", "isNonNBATeam", "yearPlayedLast", "idLeague"),
-                funs(. %>% as.integer())) %>%
+                list(. %>% as.integer())) %>%
       mutate(nameTeam = str_c(cityTeam, teamNameFull, sep = " ")) %>%
       mutate_if(is.character,
-                funs(ifelse(. == "", NA, .))) %>%
+                list(ifelse(. == "", NA, .))) %>%
       dplyr::select(nameTeam, everything())
 
     df_teams <-
@@ -815,10 +815,10 @@ nba_players <-
           "yearSeasonLast",
           "yearSeasonFirst"
         ),
-        funs(. %>% as.integer())
+        list(. %>% as.integer())
       ) %>%
       mutate_if(is.character,
-                funs(ifelse(. == "", NA, .))) %>%
+                list(ifelse(. == "", NA, .))) %>%
       mutate(
         isActive = as.logical(isActive),
         countSeasons = (yearSeasonLast - yearSeasonFirst)

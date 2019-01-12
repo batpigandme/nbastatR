@@ -342,9 +342,9 @@ get_data_classes <- function(data) {
       df_classes %>%
       left_join(df_nested_cols) %>%
       mutate_if(is_logical,
-                funs(ifelse(. %>% is.na(), FALSE, .))) %>%
+                list(ifelse(. %>% is.na(), FALSE, .))) %>%
       mutate_if(is_double,
-                funs(ifelse(. %>% is.na(), 0, .))) %>%
+                list(ifelse(. %>% is.na(), 0, .))) %>%
       suppressMessages()
   }
 
@@ -414,7 +414,7 @@ summarise_per_minute <-
       dplyr::select(-one_of(min_var)) %>%
       dplyr::select(one_of("minutes", id_columns), everything()) %>%
       mutate_at(munge_cols,
-                funs(. / minutes))
+                list(. / minutes))
 
     names(data) <-
       names(data) %>% str_replace_all("Totals|Advanced|PerGame|PerPossesion|Per36", "")
@@ -477,7 +477,7 @@ scale_per_minute <-
       data %>%
       dplyr::select(one_of("minutes"), everything()) %>%
       mutate_at(munge_cols,
-                funs(. / minutes))
+                list(. / minutes))
     if (!is_team) {
     names(data) <-
       names(data) %>% str_replace_all("Totals|Advanced|PerGame|PerPossesion|Per36", "")

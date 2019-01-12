@@ -182,7 +182,7 @@ hoops_hype_salary_summary <-
     salary_table_df <-
       salary_table_df %>%
       mutate_at(salary_table_df %>% select(dplyr::matches("X")) %>% names(),
-                funs(. %>%  as.character() %>% readr::parse_number()))
+                list(. %>%  as.character() %>% readr::parse_number()))
 
     salary_data <-
       salary_table_df %>%
